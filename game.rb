@@ -27,5 +27,10 @@ end
 
 
 board = Board.new
+board[[3,3]] = Queen.new(:b, board, [3,3])
 game = Game.new(board)
+
 game.play_turn
+#debugger
+
+p board[[3,3]].validate_moves.count

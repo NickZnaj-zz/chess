@@ -2,7 +2,7 @@ require 'byebug'
 
 class Piece
   attr_accessor :board
-  attr_reader :color
+  attr_reader :color, :pos
 
   def initialize(color, board, pos)
     @color = color
@@ -32,30 +32,30 @@ end
 
 class Sliding_pieces < Piece
 
-  def valid_move?(pos)
-    x, y = pos
-    valid = true
 
-    until valid = false
-      if @board[pos].is_a?(NullPiece)
-        valid = true
-      elsif @board[pos].is_a?(Piece) && @board[pos].color != self.color
-        valid = false
-      elsif @baord[pos].is_a?(Piece) && @board[pos].color == self.color
-        valid = false
+  def validate_moves
+    actually_valid_moves = []
+    moves(pos).each do |dir|
+      #debugger
+      dir.each_with_index do |position, idx|
+        if board[position].is_a?(Piece) && board[position].color != color #lands on enemy
+          actually_valid_moves << position
+          break
+        elsif board[position].is_a?(Piece) && board[position].color == color #lands on friendly
+          break
+        else
+          actually_valid_moves << position
+        end
       end
     end
+    actually_valid_moves
   end
 
 
 
   def all_moves_in_directions
 
-    def valid_moves
-      moves.each do |each_move|
 
-
-    end
     # directions = move_directions #=> [[0,1],[1,0],[-1,0]. [0,-1]]
     # valid_moves
     # directions.each do |dir|
@@ -81,18 +81,15 @@ class Bishop < Sliding_pieces
   def moves(pos)
     x, y = pos
     possible_pos = []
-    dir1 = []
-    dir2 = []
-    dir3 = []
-    dir4 = []
-    (1...8).each do |i|
-      possible_pos << [(x + i), (y + i)] unless (x+i) > 7 || (y+i) > 7
+    dir1, dir2, dir3, dir4 = [], [], [], []
 
-      possible_pos << [(x - i), (y - i)] unless (x-i) < 0 || (y-i) < 0
-      possible_pos << [(x - i), (y + i)] unless (x-i) < 0 || (y+i) > 7
-      possible_pos << [(x + i), (y - i)] unless (x+i) > 7 || (y-i) < 0
+    (1...8).each do |i|
+      dir1 << [(x + i), (y + i)] unless (x+i) > 7 || (y+i) > 7
+      dir2 << [(x - i), (y - i)] unless (x-i) < 0 || (y-i) < 0
+      dir3 << [(x - i), (y + i)] unless (x-i) < 0 || (y+i) > 7
+      dir4 << [(x + i), (y - i)] unless (x+i) > 7 || (y-i) < 0
     end
-    possible_pos
+    possible_pos << dir1 << dir2 << dir3 << dir4
   end
 
 
@@ -111,14 +108,15 @@ class Rook < Sliding_pieces
   def moves(pos)
     x, y = pos
     possible_pos = []
+    dir1, dir2, dir3, dir4 = [],[],[],[]
 
     (1...8).each do |i|
-      possible_pos << [ x, (y + i)] unless (y+i) > 7
-      possible_pos << [ x, (y - i)] unless (y-i) < 0
-      possible_pos << [(x - i), y] unless (x-i) < 0
-      possible_pos << [(x + i), y] unless (x+i) > 7
+      dir1 << [ x, (y + i)] unless (y+i) > 7
+      dir2 << [ x, (y - i)] unless (y-i) < 0
+      dir3 << [(x - i), y] unless (x-i) < 0
+      dir4 << [(x + i), y] unless (x+i) > 7
     end
-    possible_pos
+    possible_pos << dir1 << dir2 << dir3 << dir4
   end
 
 end
@@ -135,18 +133,19 @@ class Queen < Sliding_pieces
   def moves(pos)
     x, y = pos
     possible_pos = []
+    dir1, dir2, dir3, dir4, dir5, dir6, dir7, dir8 = [],[],[],[],[],[],[],[]
 
     (1...8).each do |i|
-      possible_pos << [(x + i), (y + i)] unless (x+i) > 7 || (y+i) > 7
-      possible_pos << [(x - i), (y - i)] unless (x-i) < 0 || (y-i) < 0
-      possible_pos << [(x - i), (y + i)] unless (x-i) < 0 || (y+i) > 7
-      possible_pos << [(x + i), (y - i)] unless (x+i) > 7 || (y-i) < 0
-      possible_pos << [ x, (y + i)] unless (y+i) > 7
-      possible_pos << [ x, (y - i)] unless (y-i) < 0
-      possible_pos << [(x - i), y] unless (x-i) < 0
-      possible_pos << [(x + i), y] unless (x+i) > 7
+      dir1 << [(x + i), (y + i)] unless (x+i) > 7 || (y+i) > 7
+      dir2 << [(x - i), (y - i)] unless (x-i) < 0 || (y-i) < 0
+      dir3 << [(x - i), (y + i)] unless (x-i) < 0 || (y+i) > 7
+      dir4 << [(x + i), (y - i)] unless (x+i) > 7 || (y-i) < 0
+      dir5 << [ x, (y + i)] unless (y+i) > 7
+      dir6 << [ x, (y - i)] unless (y-i) < 0
+      dir7 << [(x - i), y] unless (x-i) < 0
+      dir8 << [(x + i), y] unless (x+i) > 7
     end
-    possible_pos
+    possible_pos << dir1 << dir2 << dir3 << dir4 << dir5 << dir6 << dir7 << dir8
   end
 
 
