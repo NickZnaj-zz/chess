@@ -30,9 +30,9 @@ class Display
     if [i, j] == @cursor_pos
       bg = :light_red
     elsif (i + j).odd?
-      bg = :light_blue
+      bg = :light_yellow
     else
-      bg = :blue
+      bg = :green
     end
     { background: bg, color: :white }
   end
@@ -52,8 +52,8 @@ class Display
   end
 end
 
-board = Board.new
-
-display = Display.new(board)
-display.move
-p display.selected 
+# board = Board.new
+# display = Display.new(board)
+# board.populate(:w)
+# display.move
+#p display.selected
